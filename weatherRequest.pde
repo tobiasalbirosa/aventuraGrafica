@@ -1,5 +1,6 @@
+import http.requests.*;
 class weatherRequest { 
-  Nube nube;
+  Cloud cloud;
   int onRequest;
   int halfSizeX;
   int halfSizeY;
@@ -8,10 +9,12 @@ class weatherRequest {
   float clouds;
   float temp;
   float wind_speed;
+  float humidity;
+  String pressure;
+  String timezone;
   float xMaped;
   float yMaped;
   PImage background;
-  String timezone;
   weatherRequest(float x, float y, int sizeX, int sizeY) {
     this.xMaped = map(x, 0, sizeX, -180, 180);
     this.yMaped = map(y, 0, sizeY, 90, -90);
@@ -32,6 +35,8 @@ class weatherRequest {
     this.clouds = map(clouds, 0, 320, 1, 200);
     this.clouds = round(clouds);
     this.wind_speed = objNew.getFloat("wind_speed");
+    this.humidity = objNew.getFloat("humidity");
+    this.pressure = str(objNew.getFloat("pressure"));
     this.onRequest = 0;
     this.halfSizeX = sizeX/2;
     this.halfSizeY = sizeY/2;
@@ -40,10 +45,11 @@ class weatherRequest {
     }
     state.clouds = this.clouds;
     state.timezone = response.getString("timezone");
-    state.temp = temp;
-    state.wind_speed = wind_speed;
-    state.lvl = "Requested";
-    println(objNew);
-    nube = new Nube(x, y, sizeX, sizeY, this.clouds, this.temp, this.wind_speed, this.timezone);
+    state.temp = this.temp;
+    state.humidity = this.humidity;
+    state.pressure = this.pressure;
+    state.wind_speed = wind_speed; 
+    state.update( mouseX, mouseY, width, height,  state.lvl, "Requested"); 
+    this.cloud = new Cloud(x, y, sizeX, sizeY, this.clouds, this.temp, this.wind_speed, this.humidity, this.pressure, this.timezone);
   }
 }
